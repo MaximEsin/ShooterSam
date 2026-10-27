@@ -3,19 +3,19 @@
 
 #include "ShooterAI.h"
 #include "Kismet/GameplayStatics.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 void AShooterAI::BeginPlay()
 {
 	Super::BeginPlay();
-
-	PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 }
 
 void AShooterAI::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (PlayerPawn && LineOfSightTo(PlayerPawn))
+	// APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	/*if (PlayerPawn && LineOfSightTo(PlayerPawn))
 	{
 		SetFocus(PlayerPawn);
 		MoveToActor(PlayerPawn, 200.0f);
@@ -24,5 +24,27 @@ void AShooterAI::Tick(float DeltaTime)
 	{
 		ClearFocus(EAIFocusPriority::Gameplay);
 		StopMovement();
+	}*/
+}
+
+void AShooterAI::StartBehaviorTree(AShooterSamCharacter* Player)
+{
+	if (EnemyAIBehaviorTree)
+	{
+		MyCharacter = Cast<AShooterSamCharacter>(GetPawn());
+
+		if (Player)
+		{
+			PlayerCharacter = Player;
+		}
+
+		RunBehaviorTree(EnemyAIBehaviorTree);
+
+		UBlackboardComponent* MyBlackBoard = GetBlackboardComponent();
+		if (MyBlackBoard && PlayerCharacter && MyCharacter)
+		{
+			MyBlackBoard->SetValueAsVector("PlayerLocation", PlayerCharacter->GetActorLocation());
+			MyBlackBoard->SetValueAsVector("StartLocation", MyCharacter->GetActorLocation());
+		}
 	}
 }
