@@ -43,7 +43,6 @@ void AShooterAI::StartBehaviorTree(AShooterSamCharacter* Player)
 		UBlackboardComponent* MyBlackBoard = GetBlackboardComponent();
 		if (MyBlackBoard && PlayerCharacter && MyCharacter)
 		{
-			MyBlackBoard->SetValueAsVector("PlayerLocation", PlayerCharacter->GetActorLocation());
 			MyBlackBoard->SetValueAsVector("StartLocation", MyCharacter->GetActorLocation());
 		}
 	}
