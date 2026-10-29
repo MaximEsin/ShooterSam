@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "ShooterSam.h"
+#include "SHooterSamPlayerController.h"
 
 AShooterSamCharacter::AShooterSamCharacter()
 {
@@ -79,6 +80,8 @@ void AShooterSamCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	Health = MaxHealth;
+
+	UpdateHUD();
 
 	OnTakeAnyDamage.AddDynamic(this, &AShooterSamCharacter::OnDamageTaken);
 
@@ -163,6 +166,7 @@ void AShooterSamCharacter::OnDamageTaken(AActor* DamageActor, float Damage, cons
 	if (IsAlive)
 	{
 		Health -= Damage;
+		UpdateHUD();
 
 		if (Health <= 0.0f)
 		{
@@ -172,5 +176,21 @@ void AShooterSamCharacter::OnDamageTaken(AActor* DamageActor, float Damage, cons
 			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			DetachFromControllerPendingDestroy();
 		}
+	}
+}
+
+void AShooterSamCharacter::UpdateHUD()
+{
+	AShooterSamPlayerController* PlayerController = Cast<AShooterSamPlayerController>(GetController());
+
+	if (PlayerController)
+	{
+		float NewPercent = Health / MaxHealth;
+		if (NewPercent < 0.0f)
+		{
+			NewPercent = 0.0f;
+		}
+
+		PlayerController->HUDWidget->SetHealthBarPercent(NewPercent);
 	}
 }

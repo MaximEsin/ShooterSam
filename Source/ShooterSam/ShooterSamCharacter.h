@@ -115,5 +115,7 @@ public:
 
 	UFUNCTION()
 	void OnDamageTaken(AActor* DamageActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
+	void UpdateHUD();
 };
 
